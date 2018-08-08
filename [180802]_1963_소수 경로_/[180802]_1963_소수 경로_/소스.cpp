@@ -39,7 +39,7 @@ int bfs(int s, int e) {
 
 	while (!q.empty()) {
 		
-		int here = q.front();
+		int here = q.front();  
 		q.pop();
 		
 		if (here == e){
