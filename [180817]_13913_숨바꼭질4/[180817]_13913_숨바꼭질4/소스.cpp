@@ -2,64 +2,64 @@
 #include<fstream>
 #include<vector>
 #include<queue>
+#include<algorithm>
 using namespace std;
 
 #define MAX 100001
 
-int bfs(int n, int m) {
-	int visited[MAX] = { 0, };
-	int dist[MAX] = { 0, };
+vector<int> root;
+int visited[MAX] = { 0, };
+int dist[MAX] = { 0, };
+int parents[MAX] = { 0, };
+
+int bfs(int a, int b) {
+
+
 	queue<int> q;
 	
-	q.push(n);
-	visited[n] = n;
-	dist[n] = 0;
+	q.push(a);
+	visited[a] = a;
+	dist[a] = 0;
 
 	while (!q.empty()) {
 		int here = q.front();
 		q.pop();
 	
-		if (here == m) {
-			int pre = m;
+		if (here == b) {
+			int pre = b;
 
-			vector<int> root;
-
-			cout << dist[m] << endl;
-			while(pre != n){
+			while(pre != a){
 				root.push_back(pre);
-				pre = visited[pre];
+				pre = parents[pre];
 			}
-			root.push_back(n);
-			reverse(root.begin(), root.end());
-			for (int i = 0; i < root.size(); i++)
-				cout << root[i] << " ";
-			cout << endl;
-			root.clear();
-			break;
+			root.push_back(a);
+
+			return dist[b];
 		}
 		
-		int there = here + 1;
-		if (!visited[there] && there < MAX) {
-			q.push(there);
-			visited[there] = here;
-			dist[there] = dist[here] + 1;
+		if (here + 1 < MAX && !visited[here+1]) {
+			q.push(here + 1);
+			visited[here + 1] = true;
+			parents[here + 1] = here;
+			dist[here + 1] = dist[here] + 1;
 		}
 
-		there = here - 1;
-		if (!visited[there] && there >= 0) {
-			q.push(there);
-			visited[there] = here;
-			dist[there] = dist[here] + 1;
+
+		if (here - 1 >= 0 && !visited[here - 1]) {
+			q.push(here - 1);
+			visited[here - 1] = true;
+			parents[here - 1] = here;
+			dist[here - 1] = dist[here] + 1;
 		}
 		
-		there = here * 2;
-		if (!visited[there] && there < MAX) {
-			q.push(there);
-			visited[there] = here;
-			dist[there] = dist[here] + 1;
+	
+		if (here * 2< MAX && !visited[here * 2]) {
+			q.push(here * 2);
+			visited[here * 2] = true;
+			parents[here * 2] = here;
+			dist[here * 2] = dist[here] + 1;
 		}
 	}
-
 	return 0;
 }
 
@@ -74,7 +74,12 @@ int main() {
 
 	in >> n >> m;
 
-	bfs(n, m);
+	cout << bfs(n, m) << endl;
+
+	reverse(root.begin(), root.end());
+	for (int i = 0; i < root.size(); i++)
+		cout << root[i] << " ";
+	cout << endl;
 
 	getchar();
 	return 0;
